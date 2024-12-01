@@ -15,6 +15,7 @@ export default async function HomePage() {
         <form action={async (formData: FormData) => {
             "use server";
             await database.insert(bids_schema).values({});
+            revalidatePath("/"); // re-run whole component
         }}>
             <Input name="bid" placeholder="Bid" />
             <Button type="submit">Place Bid</Button>
