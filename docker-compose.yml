@@ -1,0 +1,18 @@
+services:
+    auction-db:
+        image: postgres # go to hub.docker.com and get 'postgres' image (container)
+        restart: always
+        container_name: auction-db
+        ports:
+            - 5072:5432 # run it on this port
+            # we changed first number, as docker said that the '5432' port was already taken
+        environment:
+            POSTGRES_PASSWORD: example
+            PGDATA: /data/postgres
+        volumes:
+            - postgres:/data/postgres # mount it to this voluem
+            # inside a docker container,
+            # there's a filesystem that can be mount to our own filesystem
+
+volumes:
+    postgres:
