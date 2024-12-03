@@ -5,8 +5,11 @@ import { Input } from "@/components/ui/input"
 import SignIn from "@/components/sign-in";
 import { revalidatePath } from "next/cache";
 import { SignOut } from "@/components/signout-button";
+import { auth } from "@/auth";
 
 export default async function HomePage() {
+    const session = await auth();
+
     const bids = await database.query.bids.findMany(); // fetch all the bids from 'au_bids' table
 
     return <main className="container mx-auto py-12">
@@ -15,7 +18,9 @@ export default async function HomePage() {
             // py-12 for padding for top and bottom
         }
 
-        <SignIn/>
+        {
+            session ? <SignOut/> : <SignIn/>
+        }
 
         <form action={async (formData: FormData) => {
             "use server";
