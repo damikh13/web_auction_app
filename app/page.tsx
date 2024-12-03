@@ -19,8 +19,13 @@ export default async function HomePage() {
         }
 
         {
+            session?.user?.name
+        }
+
+        {
             session ? <SignOut/> : <SignIn/>
         }
+
 
         <form action={async (formData: FormData) => {
             "use server";
