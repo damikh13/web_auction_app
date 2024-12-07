@@ -23,29 +23,6 @@ export default async function HomePage() {
                 // py-12 for padding for top and bottom
             }
 
-            <h1 className="text-4xl font-bold mb-8">post an item to sell</h1>
-
-            <form
-                className="flex flex-col border p-8 rounded-xl space-y-4 max-w-lg"
-                action={async (formData: FormData) => {
-                    "use server";
-                    await database.insert(items).values({
-                        name: formData.get("name") as string,
-                        userId: session?.user?.id!,
-                    });
-                    revalidatePath("/"); // re-run whole component
-                }}
-            >
-                <Input
-                    className="max-w-lg"
-                    name="name"
-                    placeholder="enter item name:"
-                />
-                <Button className="self-end" type="submit">
-                    post item
-                </Button>
-            </form>
-
             <h2 className="text-2xl font-bold">items for sale</h2>
 
             <div className="grid grid-cols-4 gap-4">
