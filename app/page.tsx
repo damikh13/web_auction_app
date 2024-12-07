@@ -1,5 +1,5 @@
-import { database } from "./db/database";
-import { bids as bids_schema, items } from "./db/schema";
+import { database } from "@/app/db/database";
+import { bids as bids_schema, items } from "@/app/db/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SignIn from "@/components/sign-in";
