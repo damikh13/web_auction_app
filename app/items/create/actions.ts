@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { database } from "@/app/db/database";
 import { items } from "@/app/db/schema";
 import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export async function create_item_action(form_data: FormData) {
     const session = await auth();
@@ -20,7 +21,8 @@ export async function create_item_action(form_data: FormData) {
 
     await database.insert(items).values({
         name: form_data.get("name") as string,
+        starting_price: Number(form_data.get("starting_price")),
         userId: user.id,
     });
-    revalidatePath("/"); // re-run whole component
+    redirect("/");
 }

@@ -17,9 +17,17 @@ export default async function CreatePage() {
                 action={create_item_action}
             >
                 <Input
+                    required
                     className="max-w-lg"
                     name="name"
-                    placeholder="enter item name:"
+                    placeholder="item name"
+                />
+                <Input
+                    required
+                    className="max-w-lg"
+                    name="starting_price"
+                    type="number"
+                    placeholder="what to start your auction at"
                 />
                 <Button className="self-end" type="submit">
                     post item
