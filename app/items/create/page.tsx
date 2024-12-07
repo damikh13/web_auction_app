@@ -27,6 +27,7 @@ export default async function CreatePage() {
                     className="max-w-lg"
                     name="starting_price"
                     type="number"
+                    step="0.01"
                     placeholder="what to start your auction at"
                 />
                 <Button className="self-end" type="submit">
