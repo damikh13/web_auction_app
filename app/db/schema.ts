@@ -88,7 +88,7 @@ export const authenticators = pgTable(
     },
     (authenticator) => ({
         compositePK: primaryKey({
-            columns: [authenticator.userId, authenticator.credentialID],
+            columns: [authenticator.credentialID, authenticator.userId],
         }),
     })
 );
@@ -103,4 +103,5 @@ export const items = pgTable("au_items", {
         .notNull()
         .references(() => users.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
+    starting_price: integer("starting_price").notNull().default(0),
 });
