@@ -1,5 +1,5 @@
-import { serial } from "drizzle-orm/pg-core";
 import {
+    serial,
     boolean,
     timestamp,
     pgTable,
@@ -95,4 +95,12 @@ export const authenticators = pgTable(
 
 export const bids = pgTable("au_bids", {
     id: serial("id").primaryKey(),
+});
+
+export const items = pgTable("au_items", {
+    id: serial("id").primaryKey(),
+    userId: text("userId")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
 });

@@ -1,5 +1,5 @@
 import { database } from "./db/database";
-import { bids as bids_schema } from "./db/schema";
+import { bids as bids_schema, items } from "./db/schema";
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import SignIn from "@/components/sign-in";
@@ -10,7 +10,11 @@ import { auth } from "@/auth";
 export default async function HomePage() {
     const session = await auth();
 
-    const bids = await database.query.bids.findMany(); // fetch all the bids from 'au_bids' table
+    const all_items = await database.query.items.findMany(); // fetch all the bids from 'au_bids' table
+
+    if (!session) return null;
+    const user = session.user;
+    if (!user) return null;
 
     return <main className="container mx-auto py-12">
         {
@@ -29,17 +33,20 @@ export default async function HomePage() {
 
         <form action={async (formData: FormData) => {
             "use server";
-            await database.insert(bids_schema).values({});
+            await database.insert(items).values({
+                name: formData.get("name") as string,
+                userId: session?.user?.id!,
+            });
             revalidatePath("/"); // re-run whole component
         }}>
-            <Input name="bid" placeholder="Bid" />
-            <Button type="submit">Place Bid</Button>
+            <Input name="name" placeholder="enter item name:" />
+            <Button type="submit">post item</Button>
         </form>
 
         {
-            bids.map(
-                (bid) => (
-                    <div key={bid.id}>{bid.id}</div>
+            all_items.map(
+                (item) => (
+                    <div key={item.id}>{item.name}</div>
                 )
             )
         }
