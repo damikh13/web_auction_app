@@ -9,7 +9,7 @@ export async function Header() {
 
     return (
         <div className="bg-gray-200 py-2">
-            <div className="container flex justify-between items-center">
+            <div className="container mx-auto flex justify-between items-center">
                 <Link
                     href="/"
                     className="flex items-center gap-1 hover:underline"
@@ -18,7 +18,12 @@ export async function Header() {
                     WebAuctionApp.com
                 </Link>
 
-                <div>{session ? <SignOut /> : <SignIn />}</div>
+                <div className="flex items-center gap-4">
+                    {session?.user?.name && (
+                        <span className="text-center">{session.user.name}</span>
+                    )}
+                    {session ? <SignOut /> : <SignIn />}
+                </div>
             </div>
         </div>
     );
