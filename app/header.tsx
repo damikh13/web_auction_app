@@ -26,7 +26,7 @@ export async function Header() {
 
                     <div>
                         <Link
-                            href="items/create"
+                            href="/items/create"
                             className="flex items-center gap-1 hover:underline"
                         >
                             auction your item
