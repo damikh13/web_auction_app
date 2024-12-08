@@ -1,6 +1,11 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { create_item_action } from "@/app/items/create/actions";
+import {
+    create_item_action,
+    create_upload_url_action,
+} from "@/app/items/create/actions";
 
 export default async function CreatePage() {
     return (
@@ -14,7 +19,25 @@ export default async function CreatePage() {
 
             <form
                 className="flex flex-col border p-8 rounded-xl space-y-4 max-w-lg"
-                action={create_item_action}
+                onSubmit={async (e) => {
+                    e.preventDefault();
+                    const form = e.currentTarget as HTMLFormElement;
+                    const form_data = new FormData(form);
+                    const file = form_data.get("file") as File;
+
+                    const upload_url = await create_upload_url_action(
+                        file.name
+                    );
+                    const upload_form_data = new FormData();
+                    upload_form_data.append("file", file);
+
+                    await fetch(upload_url, {
+                        method: "PUT",
+                        body: upload_form_data,
+                    });
+
+                    // await create_item_action(form_data);
+                }}
             >
                 <Input
                     required
@@ -30,6 +53,7 @@ export default async function CreatePage() {
                     step="0.01"
                     placeholder="what to start your auction at"
                 />
+                <Input type="file" name="file"></Input>
                 <Button className="self-end" type="submit">
                     post item
                 </Button>
