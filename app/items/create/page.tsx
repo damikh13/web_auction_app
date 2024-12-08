@@ -39,7 +39,7 @@ export default async function CreatePage() {
                     });
 
                     const name = form_data.get("name") as string;
-                    const starting_price = parseInt(
+                    const starting_price = parseFloat(
                         form_data.get("starting_price") as string
                     );
                     const starting_price_in_cents = Math.floor(
