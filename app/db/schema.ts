@@ -103,5 +103,6 @@ export const items = pgTable("au_items", {
         .notNull()
         .references(() => users.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
+    file_key: text("file_key").notNull(),
     starting_price: integer("starting_price").notNull().default(0),
 });

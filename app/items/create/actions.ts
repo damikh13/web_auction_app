@@ -11,7 +11,15 @@ export async function create_upload_url_action(key: string, type: string) {
     return await get_signed_url_for_s3_obj(key, type);
 }
 
-export async function create_item_action(form_data: FormData) {
+export async function create_item_action({
+    filename,
+    name,
+    starting_price,
+}: {
+    filename: string;
+    name: string;
+    starting_price: number;
+}) {
     const session = await auth();
 
     if (!session) {
@@ -24,17 +32,10 @@ export async function create_item_action(form_data: FormData) {
         throw new Error("somehow session was defined but user/user_id wasn't.");
     }
 
-    const file = form_data.get("file") as File;
-    console.log(file);
-
-    const starting_price_str = form_data.get("starting_price") as string;
-    const starting_price_as_cents = Math.floor(
-        parseFloat(starting_price_str) * 100
-    );
-
     await database.insert(items).values({
-        name: form_data.get("name") as string,
-        starting_price: starting_price_as_cents,
+        name,
+        starting_price,
+        file_key: filename,
         userId: user.id,
     });
     redirect("/");

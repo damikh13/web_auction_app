@@ -38,7 +38,18 @@ export default async function CreatePage() {
                         headers: { "Content-Type": file.type },
                     });
 
-                    await create_item_action(form_data);
+                    const name = form_data.get("name") as string;
+                    const starting_price = parseInt(
+                        form_data.get("starting_price") as string
+                    );
+                    const starting_price_in_cents = Math.floor(
+                        starting_price * 100
+                    );
+                    await create_item_action({
+                        name,
+                        starting_price: starting_price_in_cents,
+                        filename: file.name,
+                    });
                 }}
             >
                 <Input
