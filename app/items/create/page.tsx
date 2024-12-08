@@ -38,7 +38,7 @@ export default async function CreatePage() {
                         headers: { "Content-Type": file.type },
                     });
 
-                    // await create_item_action(form_data);
+                    await create_item_action(form_data);
                 }}
             >
                 <Input
