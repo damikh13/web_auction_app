@@ -7,8 +7,8 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { get_signed_url_for_s3_obj } from "@/lib/s3";
 
-export async function create_upload_url_action(key: string) {
-    return await get_signed_url_for_s3_obj(key);
+export async function create_upload_url_action(key: string, type: string) {
+    return await get_signed_url_for_s3_obj(key, type);
 }
 
 export async function create_item_action(form_data: FormData) {

@@ -17,12 +17,13 @@ const S3_client = new S3Client({
     },
 });
 
-export async function get_signed_url_for_s3_obj(key: string) {
+export async function get_signed_url_for_s3_obj(key: string, type: string) {
     return await getSignedUrl(
         S3_client,
         new PutObjectCommand({
             Bucket: env.CLOUDFLARE_BUCKET_NAME,
             Key: key,
+            ContentType: type,
         }),
         { expiresIn: 3600 }
     );

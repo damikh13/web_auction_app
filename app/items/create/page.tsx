@@ -26,7 +26,8 @@ export default async function CreatePage() {
                     const file = form_data.get("file") as File;
 
                     const upload_url = await create_upload_url_action(
-                        file.name
+                        file.name,
+                        file.type
                     );
                     const upload_form_data = new FormData();
                     upload_form_data.append("file", file);
@@ -34,6 +35,7 @@ export default async function CreatePage() {
                     await fetch(upload_url, {
                         method: "PUT",
                         body: upload_form_data,
+                        headers: { "Content-Type": file.type },
                     });
 
                     // await create_item_action(form_data);
