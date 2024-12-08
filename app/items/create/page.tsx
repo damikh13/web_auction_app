@@ -7,7 +7,7 @@ import {
     create_upload_url_action,
 } from "@/app/items/create/actions";
 
-export default async function CreatePage() {
+export default function CreatePage() {
     return (
         <main className="container mx-auto py-12 space-y-4">
             {
