@@ -29,13 +29,10 @@ export default function CreatePage() {
                         file.name,
                         file.type
                     );
-                    const upload_form_data = new FormData();
-                    upload_form_data.append("file", file);
 
                     await fetch(upload_url, {
                         method: "PUT",
-                        body: upload_form_data,
-                        headers: { "Content-Type": file.type },
+                        body: file,
                     });
 
                     const name = form_data.get("name") as string;
