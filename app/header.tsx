@@ -24,12 +24,26 @@ export async function Header() {
                         WebAuctionApp.com
                     </Link>
 
-                    <div>
+                    <div className="flex items-center gap-8">
+                        <Link
+                            href="/"
+                            className="flex items-center gap-1 hover:underline"
+                        >
+                            all auctions
+                        </Link>
+
                         <Link
                             href="/items/create"
                             className="flex items-center gap-1 hover:underline"
                         >
-                            auction your item
+                            create auction
+                        </Link>
+
+                        <Link
+                            href="/auctions"
+                            className="flex items-center gap-1 hover:underline"
+                        >
+                            my auctions
                         </Link>
                     </div>
                 </div>
