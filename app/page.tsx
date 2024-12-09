@@ -1,15 +1,8 @@
 import { database } from "@/app/db/database";
-import { auth } from "@/auth";
 import { ItemCard } from "@/app/item_card";
 
 export default async function HomePage() {
-    const session = await auth();
-
-    const all_items = await database.query.items.findMany(); // fetch all the bids from 'au_bids' table
-
-    if (!session) return null;
-    const user = session.user;
-    if (!user) return null;
+    const all_items = await database.query.items.findMany(); // fetch all the items from 'au_items' table
 
     return (
         <main className="container mx-auto py-12 space-y-4">
