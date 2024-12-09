@@ -106,3 +106,5 @@ export const items = pgTable("au_items", {
     file_key: text("file_key").notNull(),
     starting_price: integer("starting_price").notNull().default(0),
 });
+
+export type Item = typeof items.$inferSelect;
