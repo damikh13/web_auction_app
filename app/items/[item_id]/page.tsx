@@ -1,13 +1,14 @@
 import { database } from "@/app/db/database";
-import { items } from "@/app/db/schema";
+import { bids, items } from "@/app/db/schema";
 import { Button } from "@/components/ui/button";
 import { page_title_styles } from "@/styles";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import Image from "next/image";
 import { get_image_url } from "@/util/files";
 import { formatDistance, subDays } from "date-fns";
 import { format_to_dollar } from "@/util/currency";
+import { create_bid_action } from "./actions";
 
 function format_timestamp(timestamp: Date) {
     return formatDistance(timestamp, new Date(), {
@@ -68,9 +69,24 @@ export default async function ItemPage({
     //         timestamp: new Date(),
     //     },
     // ];
-    const bids = [];
+    // const bids = [];
 
-    const has_bids = bids.length > 0;
+    const all_bids = await database.query.bids.findMany({
+        where: eq(bids.item_id, parseInt(item_id)),
+        orderBy: desc(bids.id),
+        with: {
+            user: {
+                columns: {
+                    image: true,
+                    name: true,
+                },
+            },
+        },
+    });
+
+    console.log(all_bids);
+
+    const has_bids = all_bids.length > 0;
 
     return (
         <main className="space-y-4">
@@ -87,7 +103,13 @@ export default async function ItemPage({
                         width={400}
                         height={400}
                     ></Image>
-                    <div className="text-xl">
+                    <div className="text-xl space-y-4">
+                        <div>
+                            current bid{" "}
+                            <span className="font-bold">
+                                ${format_to_dollar(item.current_bid)}
+                            </span>
+                        </div>
                         <div>
                             starting price of{" "}
                             <span className="font-bold">
@@ -104,20 +126,25 @@ export default async function ItemPage({
                 </div>
 
                 <div className="space-y-4 flex-1">
-                    <h2 className="text-2xl font-bold">current bids</h2>
+                    <div className="flex justify-between">
+                        <h2 className="text-2xl font-bold">current bids</h2>
+                        <form action={create_bid_action.bind(null, item.id)}>
+                            <Button>place a bid</Button>
+                        </form>
+                    </div>
 
                     {has_bids ? (
                         <ul className="space-y-4">
-                            {bids.map((bid) => (
+                            {all_bids.map((bid) => (
                                 <li className="bg-gray-100 rounded-xl p-4">
                                     <div className="flex gap-4">
                                         <div>
                                             <span className="font-bold">
-                                                ${bid.amount}
+                                                ${format_to_dollar(bid.amount)}
                                             </span>{" "}
                                             by{" "}
                                             <span className="font-bold">
-                                                {bid.user_name}
+                                                {bid.user.name}
                                             </span>{" "}
                                         </div>
                                         <div>
@@ -136,7 +163,6 @@ export default async function ItemPage({
                                 height="200"
                                 alt="No data"
                             ></Image>
-                            <Button>place a bid</Button>
                         </div>
                     )}
                 </div>

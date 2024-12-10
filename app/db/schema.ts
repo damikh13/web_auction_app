@@ -10,6 +10,7 @@ import {
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
 import type { AdapterAccountType } from "next-auth/adapters";
+import { relations } from "drizzle-orm";
 
 const connectionString = "postgres://postgres:postgres@localhost:5432/drizzle";
 const pool = postgres(connectionString, { max: 1 });
@@ -93,10 +94,6 @@ export const authenticators = pgTable(
     })
 );
 
-export const bids = pgTable("au_bids", {
-    id: serial("id").primaryKey(),
-});
-
 export const items = pgTable("au_items", {
     id: serial("id").primaryKey(),
     userId: text("userId")
@@ -104,8 +101,28 @@ export const items = pgTable("au_items", {
         .references(() => users.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     file_key: text("file_key").notNull(),
+    current_bid: integer("current_bid").notNull().default(0),
     starting_price: integer("starting_price").notNull().default(0),
     bid_interval: integer("bid_interval").notNull().default(100),
 });
 
 export type Item = typeof items.$inferSelect;
+
+export const bids = pgTable("au_bids", {
+    id: serial("id").primaryKey(),
+    amount: integer("amount").notNull(),
+    item_id: serial("item_id")
+        .notNull()
+        .references(() => items.id, { onDelete: "cascade" }),
+    user_id: text("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    timestamp: timestamp("timestamp", { mode: "date" }).notNull(),
+});
+
+export const users_relations = relations(bids, ({ one }) => ({
+    user: one(users, {
+        fields: [bids.user_id],
+        references: [users.id],
+    }),
+}));
