@@ -1,14 +1,13 @@
-import { database } from "@/app/db/database";
-import { bids, items } from "@/app/db/schema";
 import { Button } from "@/components/ui/button";
 import { page_title_styles } from "@/styles";
-import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import Image from "next/image";
 import { get_image_url } from "@/util/files";
 import { formatDistance, subDays } from "date-fns";
 import { format_to_dollar } from "@/util/currency";
 import { create_bid_action } from "./actions";
+import { get_bids_for_item } from "@/data_access/bids";
+import { get_item } from "@/data_access/items";
 
 function format_timestamp(timestamp: Date) {
     return formatDistance(timestamp, new Date(), {
@@ -21,9 +20,7 @@ export default async function ItemPage({
 }: {
     params: { item_id: string };
 }) {
-    const item = await database.query.items.findFirst({
-        where: eq(items.id, parseInt(item_id)),
-    });
+    const item = await get_item(parseInt(item_id));
 
     if (!item) {
         return (
@@ -49,43 +46,7 @@ export default async function ItemPage({
         );
     }
 
-    // const bids = [
-    //     {
-    //         id: 1,
-    //         amount: 100,
-    //         user_name: "Alice",
-    //         timestamp: new Date(),
-    //     },
-    //     {
-    //         id: 2,
-    //         amount: 200,
-    //         user_name: "Bob",
-    //         timestamp: new Date(),
-    //     },
-    //     {
-    //         id: 3,
-    //         amount: 300,
-    //         user_name: "Clarlie",
-    //         timestamp: new Date(),
-    //     },
-    // ];
-    // const bids = [];
-
-    const all_bids = await database.query.bids.findMany({
-        where: eq(bids.item_id, parseInt(item_id)),
-        orderBy: desc(bids.id),
-        with: {
-            user: {
-                columns: {
-                    image: true,
-                    name: true,
-                },
-            },
-        },
-    });
-
-    console.log(all_bids);
-
+    const all_bids = await get_bids_for_item(item.id);
     const has_bids = all_bids.length > 0;
 
     return (
