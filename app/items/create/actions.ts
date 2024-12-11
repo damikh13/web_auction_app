@@ -35,10 +35,11 @@ export async function create_item_action({
     }
 
     await database.insert(items).values({
-        name,
-        starting_price,
-        file_key: filename,
         userId: user.id,
+        name,
+        file_key: filename,
+        current_bid: starting_price,
+        starting_price,
         end_date,
     });
     redirect("/");
