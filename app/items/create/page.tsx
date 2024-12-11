@@ -46,9 +46,17 @@ export default function CreatePage() {
                     const starting_price_in_cents = Math.floor(
                         starting_price * 100
                     );
+                    const bid_interval = parseFloat(
+                        form_data.get("bid_interval") as string
+                    );
+                    if (isNaN(bid_interval)) {
+                        throw new Error("Invalid bid interval");
+                    }
+                    const bid_interval_in_cents = bid_interval * 100;
                     await create_item_action({
                         name,
                         starting_price: starting_price_in_cents,
+                        bid_interval: bid_interval_in_cents,
                         filename: file.name,
                         end_date: date,
                     });
@@ -66,7 +74,15 @@ export default function CreatePage() {
                     name="starting_price"
                     type="number"
                     step="0.01"
-                    placeholder="what to start your auction at"
+                    placeholder="what to start your auction at ($)"
+                />
+                <Input
+                    required
+                    className="max-w-lg"
+                    name="bid_interval"
+                    type="number"
+                    step="0.01"
+                    placeholder="bid interval ($)"
                 />
                 <Input type="file" name="file"></Input>
                 <DatePickerDemo date={date} set_date={set_date} />
