@@ -1,8 +1,8 @@
 "use client";
 
-import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import {
+    NotificationCell,
     NotificationFeedPopover,
     NotificationIconButton,
 } from "@knocklabs/react";
@@ -10,6 +10,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import { format_to_dollar } from "@/util/currency";
 
 export function Header() {
     const [isVisible, setIsVisible] = useState(false);
@@ -70,6 +71,26 @@ export function Header() {
                         buttonRef={notifButtonRef}
                         isVisible={isVisible}
                         onClose={() => setIsVisible(false)}
+                        renderItem={({ item, ...props }) => (
+                            <NotificationCell {...props} item={item}>
+                                <div className="rounded-xl">
+                                    <Link
+                                        className="text-blue-400 hover:text=blue-500"
+                                        onClick={() => {
+                                            setIsVisible(false);
+                                        }}
+                                        href={`/items/${item.data.item_id}`}
+                                    >
+                                        Someone outbidded you on{" "}
+                                        <span className="font-bold">
+                                            {item.data.item_name}
+                                        </span>{" "}
+                                        by $
+                                        {format_to_dollar(item.data.bid_amount)}
+                                    </Link>
+                                </div>
+                            </NotificationCell>
+                        )}
                     />
                     {session?.data?.user?.image && (
                         <Image

@@ -80,8 +80,8 @@ export async function create_bid_action(item_id: number) {
             recipients,
             data: {
                 item_id,
-                bidAmount: latest_bid_value,
-                itemName: item.name,
+                bid_amount: latest_bid_value,
+                item_name: item.name,
             },
         });
     }
