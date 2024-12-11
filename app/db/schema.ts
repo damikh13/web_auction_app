@@ -104,6 +104,7 @@ export const items = pgTable("au_items", {
     current_bid: integer("current_bid").notNull().default(0),
     starting_price: integer("starting_price").notNull().default(0),
     bid_interval: integer("bid_interval").notNull().default(100),
+    end_date: timestamp("end_date", { mode: "date" }).notNull(),
 });
 
 export type Item = typeof items.$inferSelect;

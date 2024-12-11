@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { Knock } from "@knocklabs/node";
 import { env } from "@/env";
+import { is_bid_over } from "@/util/bids";
 
 const knock = new Knock(env.KNOCK_SECRET_KEY);
 
@@ -25,6 +26,10 @@ export async function create_bid_action(item_id: number) {
 
     if (!item) {
         throw new Error("item not found");
+    }
+
+    if (is_bid_over(item)) {
+        throw new Error("the auction is already over");
     }
 
     const latest_bid_value = item.current_bid + item.bid_interval;

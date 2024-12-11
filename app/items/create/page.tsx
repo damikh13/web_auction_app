@@ -7,8 +7,11 @@ import {
     create_upload_url_action,
 } from "@/app/items/create/actions";
 import { page_title_styles } from "@/styles";
+import { DatePickerDemo } from "@/components/date_picker";
+import { useState } from "react";
 
 export default function CreatePage() {
+    const [date, set_date] = useState<Date | undefined>();
     return (
         <main className="space-y-4">
             <h1 className={page_title_styles}>post an item</h1>
@@ -17,6 +20,11 @@ export default function CreatePage() {
                 className="flex flex-col border p-8 rounded-xl space-y-4 max-w-lg"
                 onSubmit={async (e) => {
                     e.preventDefault();
+
+                    if (!date) {
+                        return;
+                    }
+
                     const form = e.currentTarget as HTMLFormElement;
                     const form_data = new FormData(form);
                     const file = form_data.get("file") as File;
@@ -42,6 +50,7 @@ export default function CreatePage() {
                         name,
                         starting_price: starting_price_in_cents,
                         filename: file.name,
+                        end_date: date,
                     });
                 }}
             >
@@ -60,6 +69,7 @@ export default function CreatePage() {
                     placeholder="what to start your auction at"
                 />
                 <Input type="file" name="file"></Input>
+                <DatePickerDemo date={date} set_date={set_date} />
                 <Button className="self-end" type="submit">
                     post item
                 </Button>

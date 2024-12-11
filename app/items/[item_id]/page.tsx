@@ -9,6 +9,8 @@ import { create_bid_action } from "./actions";
 import { get_bids_for_item } from "@/data_access/bids";
 import { get_item } from "@/data_access/items";
 import { auth } from "@/auth";
+import { Badge } from "@/components/ui/badge";
+import { is_bid_over } from "@/util/bids";
 
 function format_timestamp(timestamp: Date) {
     return formatDistance(timestamp, new Date(), {
@@ -52,7 +54,8 @@ export default async function ItemPage({
     const all_bids = await get_bids_for_item(item.id);
     const has_bids = all_bids.length > 0;
 
-    const can_place_bid = session && item.userId !== session.user.id;
+    const can_place_bid =
+        session && item.userId !== session.user.id && !is_bid_over(item);
 
     return (
         <main className="space-y-4">
@@ -62,6 +65,11 @@ export default async function ItemPage({
                         <span className="font-normal">auction for</span>{" "}
                         {item.name}
                     </h1>
+                    {is_bid_over(item) && (
+                        <Badge className="w-fit" variant="destructive">
+                            bidding over
+                        </Badge>
+                    )}
                     <Image
                         className="rounded-xl"
                         src={get_image_url(item.file_key)}
