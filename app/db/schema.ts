@@ -17,7 +17,7 @@ const pool = postgres(connectionString, { max: 1 });
 
 export const db = drizzle(pool);
 
-export const users = pgTable("au_user", {
+export const users = pgTable("au_users", {
     id: text("id")
         .primaryKey()
         .$defaultFn(() => crypto.randomUUID()),
