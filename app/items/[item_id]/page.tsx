@@ -8,6 +8,7 @@ import { format_to_dollar } from "@/util/currency";
 import { create_bid_action } from "./actions";
 import { get_bids_for_item } from "@/data_access/bids";
 import { get_item } from "@/data_access/items";
+import { auth } from "@/auth";
 
 function format_timestamp(timestamp: Date) {
     return formatDistance(timestamp, new Date(), {
@@ -21,6 +22,8 @@ export default async function ItemPage({
     params: { item_id: string };
 }) {
     const item = await get_item(parseInt(item_id));
+
+    const session = await auth();
 
     if (!item) {
         return (
@@ -48,6 +51,8 @@ export default async function ItemPage({
 
     const all_bids = await get_bids_for_item(item.id);
     const has_bids = all_bids.length > 0;
+
+    const can_place_bid = session && item.userId !== session.user.id;
 
     return (
         <main className="space-y-4">
@@ -89,9 +94,13 @@ export default async function ItemPage({
                 <div className="space-y-4 flex-1">
                     <div className="flex justify-between">
                         <h2 className="text-2xl font-bold">current bids</h2>
-                        <form action={create_bid_action.bind(null, item.id)}>
-                            <Button>place a bid</Button>
-                        </form>
+                        {can_place_bid && (
+                            <form
+                                action={create_bid_action.bind(null, item.id)}
+                            >
+                                <Button>place a bid</Button>
+                            </form>
+                        )}
                     </div>
 
                     {has_bids ? (
@@ -124,6 +133,16 @@ export default async function ItemPage({
                                 height="200"
                                 alt="No data"
                             ></Image>
+                            {can_place_bid && (
+                                <form
+                                    action={create_bid_action.bind(
+                                        null,
+                                        item.id
+                                    )}
+                                >
+                                    <Button>place a bid</Button>
+                                </form>
+                            )}
                         </div>
                     )}
                 </div>
