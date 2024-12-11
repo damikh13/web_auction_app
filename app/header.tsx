@@ -79,14 +79,16 @@ export function Header() {
                                         onClick={() => {
                                             setIsVisible(false);
                                         }}
-                                        href={`/items/${item.data.item_id}`}
+                                        href={`/items/${item?.data?.item_id}`}
                                     >
                                         Someone outbidded you on{" "}
                                         <span className="font-bold">
-                                            {item.data.item_name}
+                                            {item?.data?.item_name}
                                         </span>{" "}
                                         by $
-                                        {format_to_dollar(item.data.bid_amount)}
+                                        {format_to_dollar(
+                                            item?.data?.bid_amount
+                                        )}
                                     </Link>
                                 </div>
                             </NotificationCell>
