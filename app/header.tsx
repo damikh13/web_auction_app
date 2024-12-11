@@ -15,6 +15,7 @@ export function Header() {
     const [isVisible, setIsVisible] = useState(false);
     const notifButtonRef = useRef(null);
     const session = useSession();
+    const user_id = session?.data?.user?.id;
 
     return (
         <div className="bg-gray-200 py-2">
@@ -40,20 +41,23 @@ export function Header() {
                         >
                             all auctions
                         </Link>
+                        {user_id && (
+                            <>
+                                <Link
+                                    href="/items/create"
+                                    className="flex items-center gap-1 hover:underline"
+                                >
+                                    create auction
+                                </Link>
 
-                        <Link
-                            href="/items/create"
-                            className="flex items-center gap-1 hover:underline"
-                        >
-                            create auction
-                        </Link>
-
-                        <Link
-                            href="/auctions"
-                            className="flex items-center gap-1 hover:underline"
-                        >
-                            my auctions
-                        </Link>
+                                <Link
+                                    href="/auctions"
+                                    className="flex items-center gap-1 hover:underline"
+                                >
+                                    my auctions
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -67,6 +71,15 @@ export function Header() {
                         isVisible={isVisible}
                         onClose={() => setIsVisible(false)}
                     />
+                    {session?.data?.user?.image && (
+                        <Image
+                            className="rounded-xl"
+                            src={session?.data?.user?.image}
+                            width="40"
+                            height="40"
+                            alt="user avatar"
+                        />
+                    )}
                     <div>
                         {session?.data?.user?.name && (
                             <span className="text-center">
@@ -75,7 +88,7 @@ export function Header() {
                         )}
                     </div>
                     <div>
-                        {session ? (
+                        {user_id ? (
                             <Button
                                 type="submit"
                                 onClick={() =>
