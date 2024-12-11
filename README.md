@@ -2,7 +2,13 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, run docker container for database:
+
+```bash
+docker compose up
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
@@ -16,21 +22,36 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Description
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+It is an online auction platform. Users can post items by specifying a title, starting price, bid interval, as well as attaching a picture and selecting an end date. Once item's been posted, other users can bid on it, receiving notifications if their current bid is “outbid” by someone else.
 
-## Learn More
+## Architechture
 
-To learn more about Next.js, take a look at the following resources:
+The basis of the project is next.js. The database is postgres running under the docker container. Communication with the database is done via Drizzle ORM. For pre-styled UI-components shadCN is used. User authorization is done using auth.js. All user product photos are stored in R2 Bucket from cloudflare. Knock is used to send notifications.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+So User (Browser/Client) <--> Frontend (Next.js (React) shadCN/UI) <--> Backend (API routes Drizzle ORM) <--> PostgreSQL DB.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## User paths
 
-## Deploy on Vercel
+### Registration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+User clicks on 'sign in' button at the right upper corner, which asks them to log in via google account. They can sign out and choose a different account if they like.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Choosing an auction
+
+At the home ('all auctions') page, list of all auctions is presented. User can choose one and either start bidding by pressing 'place bid' button or view history of bids by pressing 'view bids history' if auction is over.
+
+### Bidding
+
+On particular item page that user chose, they can see list of bids made so far. If they press 'place a bid' button, ther own bid of (last_bid + bid_interval) will be placed
+In-app notification to all previous bidders will be sent that they were outbidded.
+
+### Creating an auction
+
+To create an auction, user can press 'create auction' button on the header, which will take them to another 'create' page. There they can specify an item name, starting price of the auction, bid interval, attach photo of the item and pick auction end date.
+Once all fields are filled, user can press 'post item' button which will add the item to list of all items on home page, which user will be redirected to.
+
+### Checking out list of your auctioned items
+
+In order to see not all the items, but just the ones published by you, you can follow 'my auctions' link on the header.
