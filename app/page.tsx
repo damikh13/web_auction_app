@@ -7,7 +7,8 @@ export default async function HomePage() {
 
     return (
         <main className="space-y-4">
-            <h2 className={page_title_styles}>items for sale</h2>
+            {/* <h2 className={page_title_styles}>items for sale</h2> */}
+            <h2 className="text-4xl font-bold">items for sale</h2>
 
             <div className="grid grid-cols-4 gap-4">
                 {all_items.map((item) => (
