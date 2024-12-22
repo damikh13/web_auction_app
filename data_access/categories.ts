@@ -2,7 +2,13 @@ import { database } from "@/app/db/database";
 import { categories } from "@/app/db/schema";
 
 export async function add_categories() {
-    const categoryNames = ["Clothing", "Electronics", "Books", "Furniture"];
+    const categoryNames = [
+        "clothing",
+        "electronics",
+        "books",
+        "furniture",
+        "other",
+    ];
 
     for (const name of categoryNames) {
         await database
