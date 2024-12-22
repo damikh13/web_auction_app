@@ -11,12 +11,15 @@ import { Badge } from "@/components/ui/badge";
 export function ItemCard({ item }: { item: ItemWithCategory }) {
     return (
         <div key={item.item.id} className="border p-8 rounded-xl space-y-2">
-            <Image
-                src={get_image_url(item.item.file_key)}
-                alt={item.item.name}
-                width={200}
-                height={200}
-            ></Image>
+            <div className="relative w-full h-48">
+                <Image
+                    src={get_image_url(item.item.file_key)}
+                    alt={item.item.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-lg"
+                />
+            </div>
             <h2 className="text-xl font-bold">{item.item.name}</h2>
 
             {item.category && item.category.name && (
