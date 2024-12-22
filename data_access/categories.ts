@@ -16,8 +16,6 @@ export async function add_categories() {
             .values({ name })
             .onConflictDoNothing(); // skip if category already exists
     }
-
-    console.log("Categories added successfully!");
 }
 
 add_categories().catch(console.error);
