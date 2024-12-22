@@ -2,16 +2,34 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "@/components/ui/select";
 import {
     create_item_action,
     create_upload_url_action,
 } from "@/app/items/create/actions";
 import { page_title_styles } from "@/styles";
 import { DatePickerDemo } from "@/components/date_picker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { get_categories } from "@/data_access/categories";
 
 export default function CreatePage() {
+    const [categories, set_categories] = useState<
+        { id: number; name: string }[]
+    >([]);
+    const [selected_category, set_selected_category] = useState<
+        number | undefined
+    >();
     const [date, set_date] = useState<Date | undefined>();
+
+    useEffect(() => {
+        async function fetch_categories() {
+            const response = await fetch("/api/categories");
+            const categories = await response.json();
+            set_categories(categories);
+        }
+        fetch_categories();
+    }, []);
+
     return (
         <main className="space-y-4">
             <h1 className={page_title_styles}>post an item</h1>
@@ -21,7 +39,7 @@ export default function CreatePage() {
                 onSubmit={async (e) => {
                     e.preventDefault();
 
-                    if (!date) {
+                    if (!date || !selected_category) {
                         return;
                     }
 
@@ -59,6 +77,7 @@ export default function CreatePage() {
                         bid_interval: bid_interval_in_cents,
                         filename: file.name,
                         end_date: date,
+                        category_id: selected_category,
                     });
                 }}
             >
@@ -85,6 +104,21 @@ export default function CreatePage() {
                     placeholder="bid interval ($)"
                 />
                 <Input type="file" name="file"></Input>
+                <Select
+                    required
+                    onValueChange={(value) => set_selected_category(parseInt(value))}
+                >
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {categories.map((category) => (
+                            <SelectItem key={category.id} value={category.id.toString()}>
+                                {category.name}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
                 <DatePickerDemo date={date} set_date={set_date} />
                 <Button className="self-end" type="submit">
                     post item

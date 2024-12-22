@@ -94,6 +94,11 @@ export const authenticators = pgTable(
     })
 );
 
+export const categories = pgTable("au_categories", {
+    id: serial("id").primaryKey(),
+    name: text("name").notNull().unique(),
+});
+
 export const items = pgTable("au_items", {
     id: serial("id").primaryKey(),
     userId: text("userId")
@@ -105,9 +110,12 @@ export const items = pgTable("au_items", {
     starting_price: integer("starting_price").notNull().default(0),
     bid_interval: integer("bid_interval").notNull().default(100),
     end_date: timestamp("end_date", { mode: "date" }).notNull(),
+    category_id: integer("category_id")
+        .notNull()
+        .references(() => categories.id, { onDelete: "restrict" }),
 });
 
-export type Item = typeof items.$inferSelect;
+export type Item = typeof items.$inferSelect & { category: { name: string } };
 
 export const bids = pgTable("au_bids", {
     id: serial("id").primaryKey(),
@@ -125,5 +133,16 @@ export const users_relations = relations(bids, ({ one }) => ({
     user: one(users, {
         fields: [bids.user_id],
         references: [users.id],
+    }),
+}));
+
+export const categories_relations = relations(categories, ({ many }) => ({
+    items: many(items), // Link items to categories without specifying `fields`
+}));
+
+export const items_relations = relations(items, ({ one }) => ({
+    category: one(categories, {
+        fields: [items.category_id],
+        references: [categories.id],
     }),
 }));

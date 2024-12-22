@@ -6,6 +6,7 @@ import Link from "next/link";
 import { format_to_dollar } from "@/util/currency";
 import { format } from "date-fns";
 import { is_bid_over } from "@/util/bids";
+import { Badge } from "@/components/ui/badge";
 
 export function ItemCard({ item }: { item: Item }) {
     return (
@@ -17,6 +18,11 @@ export function ItemCard({ item }: { item: Item }) {
                 height={200}
             ></Image>
             <h2 className="text-xl font-bold">{item.name}</h2>
+
+            {item.category && item.category.name && (
+                <Badge className="w-fit">{item.category.name}</Badge>
+            )}
+
             <p className="text-lg">
                 starting price: ${format_to_dollar(item.starting_price)}
             </p>

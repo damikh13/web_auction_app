@@ -3,11 +3,11 @@ import { page_title_styles } from "@/styles";
 import Link from "next/link";
 import Image from "next/image";
 import { get_image_url } from "@/util/files";
-import { formatDistance, subDays } from "date-fns";
+import { formatDistance } from "date-fns";
 import { format_to_dollar } from "@/util/currency";
 import { create_bid_action } from "./actions";
 import { get_bids_for_item } from "@/data_access/bids";
-import { get_item } from "@/data_access/items";
+import { get_item, ItemWithCategory } from "@/data_access/items";
 import { auth } from "@/auth";
 import { Badge } from "@/components/ui/badge";
 import { is_bid_over } from "@/util/bids";
@@ -23,18 +23,16 @@ export default async function ItemPage({
 }: {
     params: { item_id: string };
 }) {
-    const item = await get_item(parseInt(item_id));
+    const item_with_category = await get_item(parseInt(item_id));
 
-    const session = await auth();
-
-    if (!item) {
+    if (!item_with_category) {
         return (
             <div className="space-y-8 flex flex-col items-center mt-12">
                 <h1 className={page_title_styles}>item not found</h1>
                 <p className="text-center">
-                    the item you're trying to view is invalid.
+                    The item you're trying to view is invalid.
                     <br />
-                    place go back and search for a diffirent auction item
+                    Please go back and search for a different auction item.
                 </p>
 
                 <Image
@@ -45,11 +43,16 @@ export default async function ItemPage({
                 ></Image>
 
                 <Button asChild>
-                    <Link href="/auctions">view auctions</Link>
+                    <Link href="/auctions">View Auctions</Link>
                 </Button>
             </div>
         );
     }
+
+    const item = item_with_category.item;
+    const category = item_with_category.category;
+
+    const session = await auth();
 
     const all_bids = await get_bids_for_item(item.id);
     const has_bids = all_bids.length > 0;
@@ -64,7 +67,14 @@ export default async function ItemPage({
                     <h1 className={page_title_styles}>
                         <span className="font-normal">auction for</span>{" "}
                         {item.name}
+                        {category && (
+                            <span className="ml-2 inline-flex items-center align-middle">
+                                <Badge className="text-sm">{category.name}</Badge>
+                            </span>
+                        )}
                     </h1>
+
+
                     {is_bid_over(item) && (
                         <Badge className="w-fit" variant="destructive">
                             bidding over
@@ -114,7 +124,10 @@ export default async function ItemPage({
                     {has_bids ? (
                         <ul className="space-y-4">
                             {all_bids.map((bid) => (
-                                <li className="bg-gray-100 rounded-xl p-4">
+                                <li
+                                    className="bg-gray-100 rounded-xl p-4"
+                                    key={bid.id}
+                                >
                                     <div className="flex gap-4">
                                         <div>
                                             <span className="font-bold">
