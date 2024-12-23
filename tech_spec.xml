@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TechnicalSpecification>
+    <project>
+        <name>Web Auction App</name>
+        <description>
+            Платформа для онлайн-аукционов, где пользователи могут размещать товары, указывая название, стартовую цену, интервал ставок, а также прикладывая картинку и выбирая дату окончания торгов. После размещения другие пользователи могут принимать участие в торгах, получая уведомления, если их текущую ставку кто-то “перебил”.
+        </description>
+        <data>
+            <users>
+                <user>
+                    <id>не пустая строка</id>
+                    <name>строка</name>
+                    <email>уникальная строка</email>
+                    <emailVerified>дата</emailVerified>
+                    <image>строка (ссылка на гугл-аватарку)</image>
+                </user>
+            </users>
+            <bids>
+                <bid>
+                    <id>число</id>
+                    <amount>целое число, не равное 0</amount>
+                    <item_id>целое число, не равное 0</item_id>
+                    <user_id>не пустая строчка</user_id>
+                    <timestamp>не пустая дата</timestamp>
+                </bid>
+            </bids>
+            <items>
+                <item>
+                    <id>число</id>
+                    <userId>не пустая строка</userId>
+                    <file_key>не пустая строчка</file_key>
+                    <current_bid>целое число, не равное 0</current_bid>
+                    <starting_price>целое число, не равное 0</starting_price>
+                    <bid_interval>целое число, не равное 0</bid_interval>
+                    <end_date>не пустая дата</end_date>
+                    <category_id>число</category_id>
+                    <winner_id>строка</winner_id>
+                </item>
+            </items>
+        </data>
+        <generalIntegrityConstraints>
+            Каждую секунду проверяется, не вышел ли срок какого-то из лотов. Если он вышел и есть хоть какая-то история ставок, то для лота записывается id победителя (человека, сделавшего последнюю и, соответственно, самую высокую ставку), после чего в разделе ‘won auctions’ у данного пользователя появится соответствующий лот с возможностью передать.
+        </generalIntegrityConstraints>
+        <api>
+            <description>
+                В проекте используется стандартный API от next-js, то есть:
+                - странички сайта, например, app/items/create/page.tsx отображаются при переходе по соответствующей ссылке (для приведённого примера будет localhost:3000/items/create).
+                - общение с бекенд-частью со стороны клиента происходит при помощи route’ов.
+            </description>
+        </api>
+        <technologies>
+            <base>next-js</base>
+            <authorization>auth.js</authorization>
+            <uiComponents>shadCN</uiComponents>
+            <imageStorage>R2 Bucket от cloudflare</imageStorage>
+            <notifications>Knock</notifications>
+            <database>postgres</database>
+        </technologies>
+    </project>
+</TechnicalSpecification>
