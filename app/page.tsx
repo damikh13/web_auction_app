@@ -22,9 +22,9 @@ interface ItemWithCategory {
 }
 
 export default function HomePage() {
-    const [items, setItems] = useState<ItemWithCategory[]>([]);
-    const [categories, setCategories] = useState<string[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    const [items, set_items] = useState<ItemWithCategory[]>([]);
+    const [categories, set_categories] = useState<string[]>([]);
+    const [selected_category, set_selected_category] = useState<string | null>(
         null
     );
 
@@ -34,20 +34,18 @@ export default function HomePage() {
                 const response = await fetch("/api/items");
                 const data = await response.json();
 
-                console.log("Fetched data:", data);
-
-                setCategories(data.categories);
-                setItems(data.items);
+                set_categories(data.categories);
+                set_items(data.items);
             } catch (error) {
-                console.error("Error fetching data:", error);
+                console.error("error fetching data:", error);
             }
         }
 
         fetchData();
     }, []);
 
-    const filteredItems = selectedCategory
-        ? items.filter((item) => item.category?.name === selectedCategory)
+    const filteredItems = selected_category
+        ? items.filter((item) => item.category?.name === selected_category)
         : items;
 
     return (
@@ -56,7 +54,7 @@ export default function HomePage() {
 
             <div className="flex gap-4">
                 <Button
-                    onClick={() => setSelectedCategory(null)}
+                    onClick={() => set_selected_category(null)}
                     variant="outline"
                 >
                     All
@@ -64,7 +62,7 @@ export default function HomePage() {
                 {categories.map((category) => (
                     <Button
                         key={category}
-                        onClick={() => setSelectedCategory(category)}
+                        onClick={() => set_selected_category(category)}
                         variant="outline"
                     >
                         {category}
@@ -92,7 +90,7 @@ export default function HomePage() {
                         );
                     })
                 ) : (
-                    <p>No items available</p>
+                    <p>no items available</p>
                 )}
             </div>
         </main>
