@@ -4,22 +4,8 @@ import { useEffect, useState } from "react";
 import { ItemCard } from "@/app/item_card";
 import { Button } from "@/components/ui/button";
 
-interface ItemWithCategory {
-    item: {
-        id: number;
-        userId: string;
-        name: string;
-        file_key: string;
-        current_bid: number;
-        starting_price: number;
-        bid_interval: number;
-        end_date: Date;
-        category_id: number;
-    };
-    category: {
-        name: string;
-    } | null;
-}
+import { ItemWithCategory } from "@/data_access/items";
+import { useSession } from "next-auth/react";
 
 export default function HomePage() {
     const [items, set_items] = useState<ItemWithCategory[]>([]);
@@ -27,6 +13,9 @@ export default function HomePage() {
     const [selected_category, set_selected_category] = useState<string | null>(
         null
     );
+
+    const session = useSession();
+    const user_id = session?.data?.user?.id;
 
     useEffect(() => {
         async function fetchData() {
@@ -86,6 +75,7 @@ export default function HomePage() {
                                     item,
                                     category: category_info,
                                 }}
+                                userId={user_id ? user_id : "unauthorized"}
                             />
                         );
                     })

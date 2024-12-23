@@ -2,7 +2,6 @@ import { database } from "@/app/db/database";
 import { eq } from "drizzle-orm";
 import { items, categories } from "@/app/db/schema";
 
-// Define the ItemWithCategory type
 export type ItemWithCategory = {
     item: {
         id: number;
@@ -14,6 +13,7 @@ export type ItemWithCategory = {
         bid_interval: number;
         end_date: Date;
         category_id: number;
+        winner_id: string | null;
     };
     category: {
         name: string;
@@ -45,6 +45,7 @@ export async function get_item(
                 bid_interval: result.au_items.bid_interval,
                 end_date: result.au_items.end_date,
                 category_id: result.au_items.category_id,
+                winner_id: result.au_items.winner_id,
             },
             category: result.au_categories
                 ? { name: result.au_categories.name }

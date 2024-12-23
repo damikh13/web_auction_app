@@ -7,22 +7,7 @@ import { EmptyState } from "@/app/auctions/empty_state";
 import { page_title_styles } from "@/styles";
 import { useSession } from "next-auth/react";
 
-interface ItemWithCategory {
-    item: {
-        id: number;
-        userId: string;
-        name: string;
-        file_key: string;
-        current_bid: number;
-        starting_price: number;
-        bid_interval: number;
-        end_date: Date;
-        category_id: number;
-    };
-    category: {
-        name: string;
-    } | null;
-}
+import { ItemWithCategory } from "@/data_access/items";
 
 export default function MyAuctionPage() {
     const { data: session, status } = useSession();
@@ -108,6 +93,7 @@ export default function MyAuctionPage() {
                                     item,
                                     category: category_info,
                                 }}
+                                userId={user_id ? user_id : "unauthorized"}
                             />
                         );
                     })}
