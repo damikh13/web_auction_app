@@ -9,10 +9,6 @@ import { is_bid_over } from "@/util/bids";
 import { Badge } from "@/components/ui/badge";
 
 function is_winner(item: ItemWithCategory["item"], userId: string): boolean {
-    console.log("is_winner()...");
-    console.log("winner_id:", item.winner_id);
-    console.log("user_id:");
-    console.log("...is_winner()");
     return item.winner_id === userId;
 }
 
@@ -23,7 +19,7 @@ export function ItemCard({
     item: ItemWithCategory;
     userId: string;
 }) {
-    const isWon = is_winner(item.item, userId);
+    const is_won = is_winner(item.item, userId);
 
     return (
         <div key={item.item.id} className="border p-8 rounded-xl space-y-2">
@@ -63,9 +59,21 @@ export function ItemCard({
                 </Link>
             </Button>
 
-            {isWon && (
+            {is_won && (
                 <Button asChild variant="outline" className="mt-2">
-                    <Link href={`/items/resell/${item.item.id}`}>Resell</Link>
+                    <Link
+                        href={{
+                            pathname: "/items/create",
+                            query: {
+                                name: item.item.name,
+                                starting_price: item.item.starting_price / 100,
+                                bid_interval: item.item.bid_interval / 100,
+                                category_id: item.item.category_id,
+                            },
+                        }}
+                    >
+                        Resell
+                    </Link>
                 </Button>
             )}
         </div>
