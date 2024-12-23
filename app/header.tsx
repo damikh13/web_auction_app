@@ -57,6 +57,13 @@ export function Header() {
                                 >
                                     my auctions
                                 </Link>
+
+                                <Link
+                                    href="/auctions/winning"
+                                    className="flex items-center gap-1 hover:underline"
+                                >
+                                    won auctions
+                                </Link>
                             </>
                         )}
                     </div>
