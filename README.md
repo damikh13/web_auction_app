@@ -1,57 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Online Auction Platform
 
-## Getting Started
+This is an online auction platform built with **Next.js**. Users can post items, place bids, and receive notifications when they are outbid. The backend is powered by PostgreSQL, with a smooth integration of **Drizzle ORM** and a polished frontend using **ShadCN UI**. User authentication is handled via **auth.js**, and notifications are sent using **Knock**. Item photos are stored in **Cloudflare R2 Bucket**.
 
-First, run docker container for database:
+## 🚀 Getting Started
 
-```bash
+### 1. Run the Docker container for the database:
+
 docker compose up
-```
 
-Then, run the development server:
+### 2. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+or
 
-## Description
+```bash
+yarn dev
+```
 
-It is an online auction platform. Users can post items by specifying a title, starting price, bid interval, as well as attaching a picture and selecting an end date. Once item's been posted, other users can bid on it, receiving notifications if their current bid is “outbid” by someone else.
+### 3. Run the maintenance script (to update the auction when the end time comes):
 
-## Architechture
+```bash
+npx tsx -r dotenv/config scripts/mark_winners.ts
+```
 
-The basis of the project is next.js. The database is postgres running under the docker container. Communication with the database is done via Drizzle ORM. For pre-styled UI-components shadCN is used. User authorization is done using auth.js. All user product photos are stored in R2 Bucket from cloudflare. Knock is used to send notifications.
+### 4. Open the application in your browser:
 
-So User (Browser/Client) <--> Frontend (Next.js (React) shadCN/UI) <--> Backend (API routes Drizzle ORM) <--> PostgreSQL DB.
+http://localhost:3000
 
-## User paths
+## 🌟 Project Overview
+
+An online auction platform where users can:
+
+-   Post items with a title, starting price, bid interval, and end date.
+-   Attach pictures to auction listings.
+-   Bid on items and receive notifications if they are outbid.
+-   View active auctions and their history.
+
+## 🔧 Architecture
+
+The project is built using the following technologies:
+
+-   **Frontend:** [Next.js](https://nextjs.org) with **React** and pre-styled UI components from **ShadCN UI**.
+-   **Backend:** API routes in Next.js with **Drizzle ORM** to interact with a **PostgreSQL database**.
+-   **Authentication:** User login via **auth.js** with Google account integration.
+-   **Cloud Storage:** Item photos are stored in **Cloudflare R2 Bucket**.
+-   **Notifications:** Users are notified through **Knock** when they are outbid.
+
+### Architecture Diagram:
+
+User (Browser/Client) <--> Frontend (Next.js (React) ShadCN/UI) <--> Backend (API routes Drizzle ORM) <--> PostgreSQL DB
+
+## 🧑‍💻 User Journey (UI descr)
 
 ### Registration
 
-User clicks on 'sign in' button at the right upper corner, which asks them to log in via google account. They can sign out and choose a different account if they like.
+1. Click on the **Sign In** button in the top-right corner.
+2. Log in with a Google account.
+3. Sign out and choose a different account if necessary.
 
-### Choosing an auction
+### Choosing an Auction
 
-At the home ('all auctions') page, list of all auctions is presented. User can choose one and either start bidding by pressing 'place bid' button or view history of bids by pressing 'view bids history' if auction is over.
+1. On the **Home (All Auctions)** page, browse through the list of all auctions.
+2. Select an auction to either place a bid or view the bid history (if the auction is over).
 
 ### Bidding
 
-On particular item page that user chose, they can see list of bids made so far. If they press 'place a bid' button, ther own bid of (last_bid + bid_interval) will be placed
-In-app notification to all previous bidders will be sent that they were outbidded.
+1. On the **Item Page**, view the list of bids.
+2. Click **Place a Bid** to place your own bid (calculated as the last bid + bid interval).
+3. An in-app notification is sent to all previous bidders informing them they were outbid.
 
-### Creating an auction
+### Creating an Auction
 
-To create an auction, user can press 'create auction' button on the header, which will take them to another 'create' page. There they can specify an item name, starting price of the auction, bid interval, attach photo of the item and pick auction end date.
-Once all fields are filled, user can press 'post item' button which will add the item to list of all items on home page, which user will be redirected to.
+1. Click **Create Auction** in the header.
+2. Fill out the auction details, including item name, starting price, bid interval, and auction end date.
+3. Attach a photo of the item and click **Post Item** to add it to the list of active auctions.
 
-### Checking out list of your auctioned items
+### Viewing Your Auctions
 
-In order to see not all the items, but just the ones published by you, you can follow 'my auctions' link on the header.
+1. Click **My Auctions** in the header to view the items you've posted for auction.
+
+### Viewing Won Auctions
+
+1. Click **Won Auctions** in the header to see a list of auctions you've won (i.e., where you placed the highest bid).
+
+## 📄 XML
+
+You can view the full [technical specification](tech_spec.xml).
+
+## 📊 Database Schema
+
+View the **Database Entity Relationship Diagram** (ERD) below:
+
+![Database ERD](DB_ERD.png)
