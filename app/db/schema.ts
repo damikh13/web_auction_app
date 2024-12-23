@@ -113,6 +113,9 @@ export const items = pgTable("au_items", {
     category_id: integer("category_id")
         .notNull()
         .references(() => categories.id, { onDelete: "restrict" }),
+    winner_id: text("winner_id").references(() => users.id, {
+        onDelete: "cascade",
+    }),
 });
 
 export type Item = typeof items.$inferSelect & { category: { name: string } };

@@ -60,7 +60,7 @@ export async function get_item(
 
 export async function get_categories() {
     const result = await database.select().from(categories).execute();
-    return result.map((cat) => cat.name); // Return category names
+    return result.map((cat) => cat.name); // return category names
 }
 
 export async function get_items(category: string | null = null) {
@@ -70,7 +70,7 @@ export async function get_items(category: string | null = null) {
         .leftJoin(categories, eq(categories.id, items.category_id));
 
     if (category) {
-        query.where(eq(categories.name, category)); // Filter by category if provided
+        query.where(eq(categories.name, category)); // filter by category if provided
     }
 
     const result = await query.execute();
